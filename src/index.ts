@@ -1,0 +1,2 @@
+// Async boundary
+import("./bootstrap");
