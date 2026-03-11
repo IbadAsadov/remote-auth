@@ -100,7 +100,7 @@ All async actions are currently mocked with `setTimeout`. No real API calls yet.
 
 Chakra UI v3 (CSS custom properties, no runtime injection). Design tokens in `src/theme/tokens.ts` — brand blue palette, neutral greys, semantic colours, Sora/Plus Jakarta Sans fonts. Component variants as Chakra recipes in `recipes.ts`. No `.css` files.
 
-This remote relies on the shared Chakra singleton from the host shell via MF. `AppThemeProvider` here is only used when running the remote standalone in dev.
+`AuthRoutes` wraps its entire tree with `AppThemeProvider`, so this remote brings its own Chakra theme when loaded by the host shell. The `cssVarsPrefix` is set to `"auth"` (emitting `--auth-*` CSS variables) so there is no collision with the host shell's `--mf-*` variables or `remote-dashboard`'s `--dashboard-*` variables. Changing tokens in `src/theme/tokens.ts` takes effect in both standalone dev mode and when running inside the host.
 
 ---
 
@@ -145,7 +145,7 @@ All API calls are mocked. Zero real HTTP coverage.
 
 Auth state isn't accessible outside this remote. Cross-remote state sharing isn't solved.
 
-Theme config is duplicated from the other apps. No sync mechanism.
+Theme token values are duplicated across all three apps. No sync mechanism — a shared design-token package would solve this.
 
 No accessibility audit. The step indicator has no ARIA progressbar semantics.
 
