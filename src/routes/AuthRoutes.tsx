@@ -1,4 +1,5 @@
 import { Flex, Spinner } from "@chakra-ui/react";
+import { AppThemeProvider } from "@theme/AppThemeProvider";
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
@@ -28,33 +29,35 @@ function PageSpinner() {
 
 export default function AuthRoutes() {
   return (
-    <Routes>
-      {/* /auth → /auth/login */}
-      <Route index element={<Navigate to="login" replace />} />
-      <Route
-        path="login"
-        element={
-          <Suspense fallback={<PageSpinner />}>
-            <LoginPage />
-          </Suspense>
-        }
-      />
-      <Route
-        path="register"
-        element={
-          <Suspense fallback={<PageSpinner />}>
-            <RegisterPage />
-          </Suspense>
-        }
-      />
-      <Route
-        path="forgot-password"
-        element={
-          <Suspense fallback={<PageSpinner />}>
-            <ForgotPasswordPage />
-          </Suspense>
-        }
-      />
-    </Routes>
+    <AppThemeProvider>
+      <Routes>
+        {/* /auth → /auth/login */}
+        <Route index element={<Navigate to="login" replace />} />
+        <Route
+          path="login"
+          element={
+            <Suspense fallback={<PageSpinner />}>
+              <LoginPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="register"
+          element={
+            <Suspense fallback={<PageSpinner />}>
+              <RegisterPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="forgot-password"
+          element={
+            <Suspense fallback={<PageSpinner />}>
+              <ForgotPasswordPage />
+            </Suspense>
+          }
+        />
+      </Routes>
+    </AppThemeProvider>
   );
 }

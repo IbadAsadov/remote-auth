@@ -3,7 +3,7 @@ import { buttonRecipe, cardSlotRecipe } from "./recipes";
 import { colors, typography } from "./tokens";
 
 const config = defineConfig({
-  cssVarsPrefix: "mf",
+  cssVarsPrefix: "auth",
 
   theme: {
     tokens: {
