@@ -25,6 +25,9 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set({ isLoading: true, error: null });
     try {
       await new Promise<void>((resolve) => setTimeout(resolve, 800));
+      if (Math.random() <= 0.3) {
+        throw new Error("Invalid email or password. Please try again.");
+      }
       set({
         user: { id: "1", email: credentials.email, name: "Demo User" },
         isLoading: false,

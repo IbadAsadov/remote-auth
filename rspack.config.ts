@@ -84,6 +84,7 @@ export default defineConfig({
       filename: "remoteEntry.js",
       exposes: {
         "./AuthRoutes": "./src/routes/AuthRoutes.tsx",
+        "./AuthGuard": "./src/components/AuthGuard.tsx",
       },
 
       shared: {

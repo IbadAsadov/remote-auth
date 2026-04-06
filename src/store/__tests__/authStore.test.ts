@@ -23,6 +23,7 @@ describe("authStore", () => {
 
   describe("login", () => {
     it("sets isLoading to true while in flight", async () => {
+      vi.spyOn(Math, "random").mockReturnValue(0.9);
       const { login } = useAuthStore.getState();
       const promise = login({ email: "test@example.com", password: "pass" });
 
@@ -34,6 +35,7 @@ describe("authStore", () => {
     });
 
     it("sets user and clears isLoading after successful login", async () => {
+      vi.spyOn(Math, "random").mockReturnValue(0.9);
       const { login } = useAuthStore.getState();
       const promise = login({ email: "test@example.com", password: "pass" });
 
@@ -46,6 +48,7 @@ describe("authStore", () => {
     });
 
     it("preserves user id after login", async () => {
+      vi.spyOn(Math, "random").mockReturnValue(0.9);
       const { login } = useAuthStore.getState();
       const promise = login({ email: "test@example.com", password: "pass" });
 
@@ -53,6 +56,20 @@ describe("authStore", () => {
       await promise;
 
       expect(useAuthStore.getState().user?.id).toBe("1");
+    });
+
+    it("sets error and clears isLoading after failed login", async () => {
+      vi.spyOn(Math, "random").mockReturnValue(0.1);
+      const { login } = useAuthStore.getState();
+      const promise = login({ email: "test@example.com", password: "pass" });
+
+      await vi.runAllTimersAsync();
+      await promise;
+
+      const { user, isLoading, error } = useAuthStore.getState();
+      expect(user).toBeNull();
+      expect(isLoading).toBe(false);
+      expect(error).toBe("Invalid email or password. Please try again.");
     });
   });
 

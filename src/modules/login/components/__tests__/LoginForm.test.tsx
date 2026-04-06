@@ -1,6 +1,7 @@
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { useAuthStore } from "../../../../store/authStore";
 import { render } from "../../../../test-utils";
 import { LoginForm } from "../LoginForm";
 
@@ -24,10 +25,12 @@ function setup() {
 describe("LoginForm", () => {
   beforeEach(() => {
     mockNavigate.mockReset();
+    useAuthStore.setState({ user: null, isLoading: false, error: null });
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
+    useAuthStore.setState({ user: null, isLoading: false, error: null });
   });
 
   it("renders email and password input fields", () => {

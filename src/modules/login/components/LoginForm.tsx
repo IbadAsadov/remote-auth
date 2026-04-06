@@ -2,8 +2,9 @@ import { type LoginFormData, loginSchema } from "@app-types/auth.types";
 import { Alert, Box, Button, Flex, IconButton, Link, Text, VStack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormInput } from "@modules/shared/components/form/FormInput";
+import { useAuthStore } from "@store/authStore";
 import { toaster } from "@utils/toaster";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
@@ -49,7 +50,18 @@ function EyeOffIcon() {
 export function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const { login, error: authError, clearError, isLoading, user } = useAuthStore();
+
+  useEffect(() => {
+    if (user) {
+      toaster.create({
+        title: "Welcome back!",
+        description: `Signed in as ${user.email}`,
+        type: "success",
+      });
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const methods = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -63,20 +75,8 @@ export function LoginForm() {
   } = methods;
 
   const onSubmit = async (data: LoginFormData) => {
-    setSubmitError(null);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const success = Math.random() > 0.3;
-    if (success) {
-      toaster.create({
-        title: "Welcome back!",
-        description: `Signed in as ${data.email}`,
-        type: "success",
-      });
-      navigate("/dashboard");
-    } else {
-      setSubmitError("Invalid email or password. Please try again.");
-    }
+    clearError();
+    await login({ email: data.email, password: data.password });
   };
 
   return (
@@ -116,10 +116,10 @@ export function LoginForm() {
             </Link>
           </Flex>
 
-          {submitError && (
+          {authError && (
             <Alert.Root status="error" borderRadius="md">
               <Alert.Indicator />
-              <Alert.Title>{submitError}</Alert.Title>
+              <Alert.Title>{authError}</Alert.Title>
             </Alert.Root>
           )}
 
@@ -127,7 +127,7 @@ export function LoginForm() {
             type="submit"
             colorPalette="brand"
             w="full"
-            loading={isSubmitting}
+            loading={isSubmitting || isLoading}
             loadingText="Signing in..."
           >
             Sign In
